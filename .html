@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nancy Space Station</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-1: #050816;
+      --bg-2: #0b1026;
+      --text: #f5f7ff;
+      --muted: #b9c2ff;
+      --accent: #8b5cf6;
+      --accent-2: #22d3ee;
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.14);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.22), transparent 22%),
+        radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.18), transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.08), transparent 18%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      overflow-x: hidden;
+    }
+
+    .stars, .stars::before, .stars::after {
+      position: fixed;
+      inset: 0;
+      content: "";
+      display: block;
+      pointer-events: none;
+      background-repeat: repeat;
+      z-index: 0;
+    }
+
+    .stars {
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.85), transparent),
+        radial-gradient(1.5px 1.5px at 140px 90px, rgba(255,255,255,0.75), transparent),
+        radial-gradient(1.8px 1.8px at 300px 180px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1.2px 1.2px at 420px 70px, rgba(255,255,255,0.7), transparent);
+      background-size: 500px 260px;
+      animation: drift 100s linear infinite;
+      opacity: 0.8;
+    }
+
+    .stars::before {
+      background-image:
+        radial-gradient(1px 1px at 40px 60px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1.6px 1.6px at 200px 130px, rgba(255,255,255,0.75), transparent),
+        radial-gradient(1px 1px at 360px 40px, rgba(255,255,255,0.8), transparent);
+      background-size: 420px 220px;
+      animation: drift 140s linear infinite reverse;
+      opacity: 0.55;
+    }
+
+    .stars::after {
+      background-image:
+        radial-gradient(1.4px 1.4px at 60px 120px, rgba(34,211,238,0.85), transparent),
+        radial-gradient(1.5px 1.5px at 250px 80px, rgba(139,92,246,0.8), transparent),
+        radial-gradient(1px 1px at 390px 160px, rgba(255,255,255,0.8), transparent);
+      background-size: 460px 240px;
+      animation: drift 160s linear infinite;
+      opacity: 0.35;
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0); }
+      to { transform: translateY(-260px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 64px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0 24px;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: white;
+    }
+
+    .hero {
+      min-height: 78vh;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-text {
+      padding: 24px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 7vw, 5.6rem);
+      line-height: 0.95;
+      margin-bottom: 18px;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, #ffffff, #b9c2ff, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 460px;
+    }
+
+    .planet-wrap {
+      position: relative;
+      width: min(420px, 88vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 10%;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%;
+      animation: spin 22s linear infinite;
+    }
+
+    .orbit::after {
+      content: "";
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      margin-left: -7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff, #22d3ee);
+      box-shadow: 0 0 20px rgba(34,211,238,0.7);
+    }
+
+    .planet {
+      width: 64%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, #d7ccff, #8b5cf6 45%, #4c1d95 78%, #1e113b 100%);
+      box-shadow:
+        inset -30px -30px 60px rgba(0,0,0,0.35),
+        0 0 60px rgba(139,92,246,0.35),
+        0 0 120px rgba(34,211,238,0.15);
+      position: relative;
+    }
+
+    .planet::before {
+      content: "";
+      position: absolute;
+      inset: 41% -14%;
+      border: 10px solid rgba(255,255,255,0.35);
+      border-left-color: rgba(34,211,238,0.55);
+      border-right-color: rgba(139,92,246,0.2);
+      border-radius: 50%;
+      transform: rotate(-12deg);
+      filter: blur(0.3px);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    footer {
+      padding-top: 26px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+        min-height: 320px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      nav a {
+        margin: 0 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <div class="container">
+    <header>
+      <div class="logo">Nancy Space Station</div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-text">
+          <div class="badge">Personal website · GitHub Pages ready</div>
+          <h1>
+            Launching<br />
+            <span class="gradient">Nancy Space Station</span>
+          </h1>
+          <p class="subtitle">
+            A galaxy-themed personal website to introduce who you are, show your projects,
+            and make your online presence feel clean, modern, and memorable.
+          </p>
+
+          <div class="actions">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a class="btn btn-secondary" href="#contact">Contact Me</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="planet-wrap">
+            <div class="orbit"></div>
+            <div class="planet"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="grid">
+        <div class="card">
+          <h3>About Me</h3>
+          <p>
+            I’m Nancy, a developer building projects across frontend, backend, and cloud-style systems.
+            This site is my digital station in orbit.
+          </p>
+        </div>
+
+        <div class="card" id="projects">
+          <h3>Projects</h3>
+          <p>
+            Add your best work here, such as your task manager app, full-stack systems, open source work,
+            or university projects.
+          </p>
+        </div>
+
+        <div class="card" id="contact">
+          <h3>Contact</h3>
+          <p>
+            Add your GitHub, LinkedIn, email, or resume link so recruiters and collaborators can reach you easily.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 Nancy Space Station · Built with HTML and CSS · Hosted on GitHub Pages
+    </footer>
+  </div>
+</body>
+</html>
